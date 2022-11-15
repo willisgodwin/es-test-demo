@@ -1,0 +1,16 @@
+no,age,gender,salary,monthly_expenditure,occupation,healthy_lifestyle
+1,34,0,35760,34908,Teacher,Moderate 
+2,21,0,23500,20950,Analyst,Good
+3,59,1,21000,12080,Graphic Designer,Bad
+4,45,1,45000,34090,Software Engineer,Good
+5,37,0,67050,45780,Manager,Moderate
+6,26,1,37900,25090,Teacher,Good
+7,27,0,35800,23090,Teacher,Bad
+8,39,1,45000,43000,Analyst,Good
+9,25,1,23060,22000,Graphic Designer,Moderate 
+10,67,1,39080,38000,Software Engineer,Good
+11,23,0,70900,65000,Manager,Bad
+12,57,1,29208,16000,Software Engineer,Good
+13,34,0,45000,32900,Software Engineer,Moderate
+14,45,1,24550,18000,Teacher,Good
+15,45,0,23080,18080,Teacher,Good

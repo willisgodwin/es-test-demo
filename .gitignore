@@ -26,6 +26,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+.idea/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -127,3 +128,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.DS_Store
+.idea/aws.xml
+.idea/es-test-demo.iml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/sonarlint/issuestore/index.pb
+.idea/vcs.xml

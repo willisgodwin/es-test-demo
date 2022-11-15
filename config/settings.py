@@ -1,0 +1,7 @@
+ES_CLUSTER_ADDRESS = "localhost"
+ES_PORT = "9200"
+# ES_USERNAME = "elastic"
+# ES_PASSWORD = "5b_LJYiCOIg08Bl3gN6y"
+ES_INDEX_NAME = "employees"
+ES_CONNECTION_STRING = f"http://{ES_CLUSTER_ADDRESS}:{ES_PORT}"
+
