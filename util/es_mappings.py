@@ -1,7 +1,15 @@
 es_test_mapping = {
   "settings": {
     "number_of_shards": 2,
-    "number_of_replicas": 1
+    "number_of_replicas": 1,
+    "analysis": {
+      "analyzer": {
+        "my_english_analyzer": {
+          "type": "standard",
+          "stopwords": "_english_"
+        }
+      }
+    }
   },
   "mappings": {
     "properties": {

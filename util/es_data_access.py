@@ -10,7 +10,8 @@ from elasticsearch import Elasticsearch
 
 from exceptions import ElasticSearchFailure, ESDeleteIndexFailure
 
-logging.basicConfig(filename="es.log", level=logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 
 class ElasticSearchManagement:
