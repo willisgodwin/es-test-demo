@@ -1,15 +1,11 @@
 import json
 import logging
-from typing import Dict
-
 import numpy as np
 import pandas as pd
-
 from config import settings
 from elasticsearch import Elasticsearch
-
 from exceptions import ElasticSearchFailure, ESDeleteIndexFailure
-
+from typing import Dict
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +15,7 @@ class ElasticSearchManagement:
         self.es_connection_string = settings.ES_CONNECTION_STRING
         self.es_index_name = settings.ES_INDEX_NAME
         self.es_client = Elasticsearch(settings.ES_CONNECTION_STRING)
-        self.es_client.ping()
+        self.ping()
 
     def ping(self) -> bool:
         result = self.es_client.ping()
@@ -71,7 +67,9 @@ class ElasticSearchManagement:
                 if not delete_result:
                     raise ESDeleteIndexFailure("failed to delete the index")
 
-            logging.info(f"Creating index {self.es_index_name} with the following schema: {json.dumps(mapping, indent=2)}")
+            logging.info(
+                f"Creating index {self.es_index_name} with the following schema: {json.dumps(mapping, indent=2)}")
+
             response = self.es_client.indices.create(index=self.es_index_name, ignore=400, body=mapping)
             if response and response.meta and response.meta.status == 200:
                 result = True
@@ -103,7 +101,7 @@ class ElasticSearchDataAccess:
         self.es_connection_string = settings.ES_CONNECTION_STRING
         self.es_index_name = settings.ES_INDEX_NAME
         self.es_client = Elasticsearch(settings.ES_CONNECTION_STRING)
-        self.es_client.ping()
+        self.ping()
 
     def ping(self) -> bool:
         result = self.es_client.ping()
@@ -111,19 +109,85 @@ class ElasticSearchDataAccess:
             raise ElasticSearchFailure(f"Index: '{self.es_index_name}' does not exist")
         return result
 
-    def index_one(self):
-        pass
+    def search(self,
+               no_filter: int = None,
+               gender_filter: str = None,
+               occupation_filter: [] = None,
+               salary_range_filter_lt: float = None,
+               salary_range_filter_gt: float = None,
+               monthly_expenditure_range_filter_lt: float = None,
+               monthly_expenditure_range_filter_gt: float = None,
+               healthy_lifestyle_filter: [] = None,
+               ):
+        """
+        This is the method one would use to pass any number of key/value pair search args to retrieve results.
 
-    def index_bulk(self):
-        pass
+        returns: search result of all matching documents
+        """
 
-    def search(self):
-        result = self.es_client.search(index="_all", request_timeout=5)
+        filter_and_list = list()
+        if no_filter:
+            filter_and_list.append({"key": "no", "value": no_filter})
+
+        if gender_filter:
+            filter_and_list.append({"key": "gender", "value": gender_filter})
+
+        # filter_or_list = list()
+        # if occupation_filter:
+        #     filter_or_list.append({"key": "occupation", "value": occupation_filter})
+        #
+        # if healthy_lifestyle_filter:
+        #     filter_or_list.append({"key": "healthy_lifestyle", "value": healthy_lifestyle_filter})
+
+        must_filters = list()
+        if filter_and_list and len(filter_and_list) > 0:
+            for filter in filter_and_list:
+                str_filter = '{"match": {"' + filter["key"] + '":"' + str(filter["value"]) + '"}}'
+                must_filters.append(str_filter)
+
+            print(','.join(must_filters))
+
+        # should_filters = None
+        # if filter_or_list and len(filter_or_list) > 0:
+        #     should_filters = '{"should": [{0}]}'.format(join(filter_or_list, ','))
+
+        if len(must_filters) > 0:
+            query_body = '{"query": {"bool":{"must": [' + ",".join(must_filters) + ']}}}'
+        else:
+            query_body = '{"query": {"match_all":{}}'
+
+        json_query_body = json.loads(query_body)
+        result = self.es_client.search(index="_all", request_timeout=5, body=json_query_body)
         if not result:
             raise ElasticSearchFailure("results were not returned from elasticsearch.")
 
+        logging.info(f'query hits: {result["hits"]["hits"]} ')
         return result
 
-    def get(self):
-        pass
+    def get(self, no: int):
+        """
+        This function will get 1 document by 'no' -> id
 
+        no: int this is the employee number to filter by
+
+        returns: search result of one record
+        """
+        query_body = {
+            "query": {
+                "bool": {
+                    "must": {
+                        "match": {
+                            "no": no
+                        }
+                    }
+                }
+            }
+        }
+
+        result = self.es_client.search(index="_all", body=query_body, request_timeout=5)
+        if not result:
+            raise ElasticSearchFailure("results were not returned from elasticsearch.")
+
+        logging.info(f'query hits: {result["hits"]["hits"]} ')
+
+        return result
