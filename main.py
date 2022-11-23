@@ -1,9 +1,9 @@
 import logging
 import os
 
+from schema.model import EmployeeSearchFilter
 from util.es_data_access import ElasticSearchDataAccess, ElasticSearchManagement
 from util.es_mappings import es_test_mapping
-
 
 logger = logging.getLogger(__name__)
 
@@ -30,11 +30,19 @@ def execute_searches():
     """
     search_client = ElasticSearchDataAccess()
     number_filter = 4
-    search_one_result = search_client.get(number_filter)
+    search_one_result = search_client.get(no=number_filter)
     logging.info(search_one_result)
 
-    gender_filter = "1"
-    search_many_results = search_client.search(None, gender_filter)
+    search_filter = EmployeeSearchFilter(occupation_filter="software engineer")
+    search_many_results = search_client.search(search_filter)
+    logging.info(search_many_results)
+
+    search_filter = EmployeeSearchFilter(age_filter=34, gender_filter=0)
+    search_many_results = search_client.search(search_filter)
+    logging.info(search_many_results)
+
+    search_filter = EmployeeSearchFilter(age_filter=34, salary_range_filter_gte=28000, salary_range_filter_lte=38000)
+    search_many_results = search_client.search(search_filter)
     logging.info(search_many_results)
 
 

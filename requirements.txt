@@ -1,10 +1,11 @@
 certifi~=2020.12.5
 elastic-transport==8.4.0
-elasticsearch==8.5.0
+elasticsearch-dsl==7.4.0
 urllib3==1.26.12
 numpy~=1.23.4
 pandas~=1.2.4
 pip~=22.3
+python-dateutil==2.8.2
 attrs~=20.3.0
 cryptography~=38.0.1
 docutils~=0.15.2
@@ -15,3 +16,4 @@ packaging~=20.9
 pyparsing~=2.4.7
 zipp~=3.4.1
 requests~=2.25.1
+elasticsearch~=7.17.7
