@@ -29,14 +29,14 @@
 
 class EmployeeSearchFilter:
     def __init__(self,
-                 age_filter=None,
-                 gender_filter=None,
-                 salary_range_filter_gte=None,
-                 salary_range_filter_lte=None,
-                 monthly_expenditures_range_filter_gte=None,
-                 monthly_expenditures_range_filter_lte=None,
-                 occupation_filter=None,
-                 healthy_lifestyle_filter=None):
+                 age_filter: int = None,
+                 gender_filter: int = None,
+                 salary_range_filter_gte: float = None,
+                 salary_range_filter_lte: float = None,
+                 monthly_expenditures_range_filter_gte: float = None,
+                 monthly_expenditures_range_filter_lte: float = None,
+                 occupation_filter: str = None,
+                 healthy_lifestyle_filter: str = None):
         self.age_filter = age_filter
         self.gender_filter = gender_filter
         self.salary_range_filter_gte = salary_range_filter_gte

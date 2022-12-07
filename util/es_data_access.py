@@ -40,7 +40,7 @@ class ElasticSearchManagement:
         result = False
         try:
             response = self.es_client.indices.exists(index=f"{self.es_index_name}")
-            if response and response.meta and response.meta.status == 200:
+            if response and response["acknowledged"]:
                 result = True
         except Exception as e:
             logging.exception(e)
@@ -55,7 +55,7 @@ class ElasticSearchManagement:
         result = False
         try:
             response = self.es_client.indices.delete(index=self.es_index_name)
-            if response and response.meta and response.meta.status == 200:
+            if response and response["acknowledged"]:
                 result = True
             else:
                 raise ElasticSearchFailure(f"Failed to delete the index:'{self.es_index_name}'")
@@ -82,7 +82,8 @@ class ElasticSearchManagement:
                 f"Creating index {self.es_index_name} with the following schema: {json.dumps(mapping, indent=2)}")
 
             response = self.es_client.indices.create(index=self.es_index_name, ignore=400, body=mapping)
-            if response and response.meta and response.meta.status == 200:
+            print(response)
+            if response:
                 result = True
         except Exception as e:
             logging.exception(e)
@@ -209,7 +210,7 @@ class ElasticSearchDataAccess:
 
         print(query_body)
         json_query_body = json.loads(query_body)
-        result = self.es_client.search(index="_all", request_timeout=5, body=json_query_body)
+        result = self.es_client.search(index=self.es_index_name, request_timeout=5, body=json_query_body)
         if not result:
             raise ElasticSearchFailure("results were not returned from elasticsearch.")
 
@@ -235,7 +236,7 @@ class ElasticSearchDataAccess:
             }
         }
 
-        result = self.es_client.search(index="_all", body=query_body, request_timeout=5)
+        result = self.es_client.search(index=self.es_index_name, request_timeout=5, body=query_body)
         if not result:
             raise ElasticSearchFailure("results were not returned from elasticsearch.")
 
